@@ -42,8 +42,7 @@ const styles = StyleSheet.create({
   text: {
     color: Colors.GRAY_DARK,
     fontSize: Typography.FONT_SIZE_22,
-    fontWeight: Typography.FONT_WEIGHT_REGULAR,
-    fontFamily: Typography.FONT_FAMILY_REGULAR,
+    fontFamily: Typography.FONT_FAMILY_BOLD,
   },
   button: {
     backgroundColor: Colors.THEMECOLOR,

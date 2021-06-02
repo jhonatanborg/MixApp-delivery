@@ -13,29 +13,23 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 const latitudeDelta = 0.01;
 const longitudeDelta = 0.01;
 const Map = (props) => {
-  
-  console.log("props map", props);
   async function fetchAddress(coords) {
-    console.log(coords);
-  
     const response = await ADDRESS.getAddress({
       lat: coords.latitude,
       long: coords.longitude,
     });
     setAddress(response.data);
     setRegion(coords);
+    props.setAddress(response.data);
   }
   const [address, setAddress] = useState(props.address);
   const [region, setRegion] = useState({
     latitudeDelta,
     longitudeDelta,
-    latitude: props.location.latitude,
-    longitude: props.location.longitude,
+    latitude: props.location.coords.latitude || -55.505736116319895,
+    longitude: props.location.coords.longitude || 0.009999610483646393,
   });
-  useEffect(() => {
-    fetchAddress(region);
-  }, []);
-  console.log(props);
+
   return (
     <View style={styles.container}>
       <MapView
@@ -54,16 +48,17 @@ const Map = (props) => {
             size={28}
             color={styles.icon.backgroundColor}
           />
-          <Text
-            numberOfLines={2}
-            style={styles.text}
-          >{`${address.street}, ${address.number} - ${address.district}`}</Text>
+          <Text numberOfLines={2} style={styles.text}>
+            {address && address.street
+              ? `${address.street},${address.number} - ${address.district}`
+              : "Buscar endereço"}
+          </Text>
         </View>
 
         <Button
           name="Confirmar endereço"
           buttonColor={styles.button}
-          onPress={() => props.resetSale()}
+          onPress={() => props.navigation.goBack()}
         />
       </SafeAreaView>
     </View>
