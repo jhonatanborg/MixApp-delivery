@@ -15,6 +15,8 @@ import Shop from "../screens/company/shop/Shop";
 import Product from "../screens/company/product/Product";
 import Sale from "../screens/sale/main";
 import Map from "../screens/address/map/Map";
+import ConfirmationSale from "../screens/sale/confirmation/Confirmation";
+import Payment from "../screens/sale/payment/Payment";
 const Tab = createMaterialBottomTabNavigator();
 
 const Stack = createStackNavigator();
@@ -89,6 +91,16 @@ const AppRoutes = () => {
         options={{ headerShown: false }}
         name="Map"
         component={Map}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="ConfirmationSale"
+        component={ConfirmationSale}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Payment"
+        component={Payment}
       />
     </Stack.Navigator>
   );
