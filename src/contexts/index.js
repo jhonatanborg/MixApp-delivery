@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }) => {
   async function signIn(login, password) {
     const response = await AUTH.Signin(login, password);
     setUser(response.data);
-    console.log(response);
     await AsyncStorage.setItem("@MIXAPP:user", JSON.stringify(response.data));
     await AsyncStorage.setItem("@MIXAPP:token", response.token);
   }
