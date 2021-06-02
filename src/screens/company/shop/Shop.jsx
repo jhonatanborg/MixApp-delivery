@@ -112,7 +112,11 @@ const Shop = (props) => {
           return (
             <ListProducts
               groupProducts={item}
-              company={{ id: company.id, name: company.name }}
+              company={{
+                id: company.id,
+                name: company.name,
+                payment: company.payments,
+              }}
             />
           );
         })}

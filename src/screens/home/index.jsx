@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import AuthContext from "../../contexts/index";
 import { MaterialIcons } from "@expo/vector-icons";
-import profile from "../../assets/images/profile.jpg";
 import Categorie from "../../components/molecules/Categorie/Categorie";
 import CardCompany from "../../components/molecules/Company/CardCompany";
 import styles from "./styles";
@@ -26,8 +25,6 @@ const Home = (props) => {
   const [companies, setCompanies] = useState([]);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [address, setAddress] = useState(null);
-
   async function getCoordsMobile() {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -41,9 +38,9 @@ const Home = (props) => {
       lat: location.coords.latitude,
       long: location.coords.longitude,
     });
-    setAddress(response.data);
     props.setCoords(location.coords);
     props.setAddress(response.data);
+    console.log("veio aqui");
   }
   useEffect(() => {
     async function fetchCategories() {
@@ -57,15 +54,10 @@ const Home = (props) => {
     if (!props.location) {
       getCoordsMobile();
     }
-    setAddress(props.location.address);
     fetchCompanies();
     fetchCategories();
   }, []);
 
-  function handleSignout() {
-    signOut();
-  }
-  console.log(props);
   return (
     <ScrollView style={styles.container}>
       <View style={styles.section}>
@@ -78,8 +70,8 @@ const Home = (props) => {
             <TouchableOpacity onPress={() => props.navigation.navigate("Map")}>
               <View style={styles.content}>
                 <Text style={styles.text} numberOfLines={2}>
-                  {address && address.street
-                    ? `${address.street},${address.number} - ${address.district}`
+                  {props.location && props.location.address
+                    ? `${props.location.address.street},${props.location.address.number} - ${props.location.address.district}`
                     : "Buscar endereço"}
                 </Text>
                 <MaterialIcons
@@ -92,10 +84,6 @@ const Home = (props) => {
           </View>
         </View>
       </View>
-
-      {/* <View style={styles.section}>
-        <InputText />
-      </View> */}
       <SafeAreaView>
         <View style={{ paddingTop: 15 }}>
           <Text style={styles.heading2}>Categorias</Text>
