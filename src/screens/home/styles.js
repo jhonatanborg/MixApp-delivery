@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     paddingTop: 10,
   },
   tinyLogo: {
@@ -19,13 +19,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   headerTitle: {
-    fontSize: Typography.FONT_SIZE_32,
-    fontFamily: Typography.FONT_FAMILY_BOLD,
-    color: Colors.BLACK,
-    marginHorizontal: Spacing.SCALE_18,
-  },
-  headerAddress: {
-    flexDirection: "row",
+    flex: 3,
   },
   image: {
     width: 50,
@@ -93,6 +87,7 @@ const styles = StyleSheet.create({
     fontSize: Typography.FONT_SIZE_22,
     fontWeight: Typography.FONT_WEIGHT_REGULAR,
     fontFamily: Typography.FONT_FAMILY_BOLD,
+    flex: 1,
   },
 });
 

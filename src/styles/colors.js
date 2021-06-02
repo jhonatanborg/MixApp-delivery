@@ -18,3 +18,6 @@ export const ALERT = "#cc4b37";
 export const GRAY_LIGHT = "#F5F5F8";
 export const GRAY_MEDIUM = "#cacaca";
 export const GRAY_DARK = "#8a8a8a";
+
+// TEXT
+export const TEXT_LABEL = "#727272";
