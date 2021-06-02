@@ -16,4 +16,12 @@ export default {
       url: "/user-client",
       data: user,
     }),
+  codeVerify: (code) =>
+    instance({
+      method: "POST",
+      url: "/confirm-register",
+      data: {
+        token: code,
+      },
+    }),
 };
