@@ -11,6 +11,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as saleActions from "../../../store/actions/saleActions";
+import * as companyActions from "../../../store/actions/companyActions";
 import Icon from "@expo/vector-icons/Entypo";
 import getEnvVars from "../../../../environment";
 import { convertMoney } from "../../../utils";
@@ -179,6 +180,7 @@ const Product = (props) => {
     );
     if (verifySale) {
       props.addItem({ type: "ADD_ITEM_SALE", sale });
+      props.setCompanySale({ ...props.route.params.company });
     } else {
       setModalVisible(true);
       setNewSale(sale);
@@ -188,6 +190,8 @@ const Product = (props) => {
     props.resetSale(newSale);
     setModalVisible(false);
   }
+  console.log(props);
+
   return (
     <>
       <ScrollView>
@@ -255,8 +259,9 @@ const Product = (props) => {
 const mapStateToProps = (state) => {
   return {
     sale: state.sale,
+    company: state.company,
   };
 };
 const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(saleActions, dispatch);
+  bindActionCreators({ ...saleActions, ...companyActions }, dispatch);
 export default connect(mapStateToProps, mapDispatchToProps)(Product);
