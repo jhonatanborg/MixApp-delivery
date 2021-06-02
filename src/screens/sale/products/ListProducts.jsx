@@ -1,22 +1,35 @@
 import React from "react";
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
+
 import { connect } from "react-redux";
 import * as saleActions from "../../../store/actions/saleActions";
 import { bindActionCreators } from "redux";
 import styles from "./ListProducts.style";
 import getEnvVars from "../../../../environment";
 import { convertMoney } from "../../../utils";
+import Button from "../../../components/atoms/Button/Button";
 const { BASE_URL } = getEnvVars();
 const ListProducts = (props) => {
-  console.log("aqui", props);
+  const sale = useSelector((state) => state.sale);
+  const company_name = sale[0].company_name;
+  function Total(index) {
+    return sale[index].product_qtd * Number(sale[index].total);
+  }
   return (
     <View style={styles.container}>
-      <Text>Aqui</Text>
+      <View style={styles.header}>
+        <View style={styles.headerTitle}>
+          <Text style={styles.titleScreen}>Minha sacola</Text>
+          <Text style={styles.heading1}>{company_name}</Text>
+        </View>
+      </View>
       <FlatList
-        data={props.sale}
-        keyExtractor={(item) => item.id}
+        data={sale}
+        keyExtractor={(item) => item.product_id}
         renderItem={({ item, index, separators }) => (
-          <TouchableOpacity onPress={props.onPress}>
+          <View onPress={props.onPress}>
             <View style={styles.card}>
               <View style={styles.content}>
                 <View style={styles.contain}>
@@ -26,19 +39,44 @@ const ListProducts = (props) => {
                   />
                 </View>
                 <View style={styles.cardBody}>
-                  <Text style={styles.title}>{item.product_name}</Text>
-                  <Text numberOfLines={2} style={styles.text}>
-                    {item.description}
-                  </Text>
-                  <Text style={styles.price}>
-                    {convertMoney(item.sale_value)}
-                  </Text>
+                  <View>
+                    <Text numberOfLines={1} style={styles.title}>
+                      {item.product_name}
+                    </Text>
+                    <TouchableOpacity onPress={() => props.removeItem(index)}>
+                      <Text style={styles.delete}>Remover</Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={styles.actions}>
+                    <Text style={styles.price}>
+                      {convertMoney(Total(index))}
+                    </Text>
+                    <View style={styles.bottomBarActions}>
+                      <TouchableOpacity
+                        style={styles.buttomAction}
+                        onPress={() => props.SubQtdItem(item)}
+                      >
+                        <AntDesign name="minus" size={24} color="#8a8a8a" />
+                      </TouchableOpacity>
+                      <View>
+                        <Text style={styles.quantity}>{item.product_qtd}</Text>
+                      </View>
+                      <TouchableOpacity
+                        style={styles.buttomAction}
+                        onPress={() => props.AddQtdItem(item)}
+                      >
+                        <AntDesign name="plus" size={24} color="#8a8a8a" />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                 </View>
               </View>
             </View>
-          </TouchableOpacity>
+          </View>
         )}
       />
+      <Button name="Forma de pagamento" buttonColor={styles.buttonLogin} />
     </View>
   );
 };

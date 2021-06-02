@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, ImageBackground } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+  ScrollView,
+} from "react-native";
 import styles from "./Product.style";
 import { AntDesign } from "@expo/vector-icons";
 import { connect } from "react-redux";
@@ -9,20 +15,21 @@ import Icon from "@expo/vector-icons/Entypo";
 import getEnvVars from "../../../../environment";
 import { convertMoney } from "../../../utils";
 const { BASE_URL } = getEnvVars();
-const image = {
-  uri: "https://images.pexels.com/photos/4109132/pexels-photo-4109132.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
-};
+
 import { PRODUCT } from "../../../services/api";
 import BottomBar from "../../../components/molecules/BottomBar/BottomBar";
-import { ScrollView } from "react-native-gesture-handler";
+import ModalSale from "../../../components/molecules/ModalSale/ModalSale";
 import ListComplements from "../../../components/organisms/ListComplements/ListComplements";
 const Product = (props) => {
   const [complements, setComplements] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
   const [listanova, setListaNova] = useState([]);
   const [total, setTotal] = useState(props.route.params.product.sale_value);
   const [totalComplements, setTotalComplements] = useState(0);
+  const [companyId, setCompanyId] = useState(props.route.params.company.id);
+  const [newSale, setNewSale] = useState(null);
   useEffect(() => {
     async function fetchComplements() {
       const response = await PRODUCT.getComplements(
@@ -48,11 +55,7 @@ const Product = (props) => {
     const newTotal = newQtd * parseFloat(total);
     setTotal(newTotal);
   }
-  function teste(complement, category, limit) {
-    setTotal((prevState) => {
-      console.log(prevState);
-    });
-  }
+
   function AddMountComplements(complement, category, limit) {
     let lista = listanova;
     let findedCategory = listanova[category];
@@ -74,9 +77,6 @@ const Product = (props) => {
           parseFloat(product.sale_value) * quantity +
           parseFloat(newTotalComplements) * quantity;
         setTotal(newTotal);
-        console.log("total", total);
-        console.log("quantidade", quantity);
-        console.log("newTotalComplements", newTotalComplements);
       } else if (findedCategory.allQtd < findedCategory.limite) {
         complement.qtd = 1;
         findedCategory.push(complement);
@@ -146,7 +146,6 @@ const Product = (props) => {
     let objectChilds = [];
     if (complements.length > 0) {
       complements.forEach((category) => {
-        console.log(category);
         if (listanova[category.name]) {
           listanova[category.name].forEach((complement) => {
             objectChilds.push({
@@ -156,7 +155,7 @@ const Product = (props) => {
               product_name: complement.name,
               total: complement.sale_value,
               sale_type_id: 1,
-              company_id: 1,
+              company_id: companyId,
             });
           });
         }
@@ -170,11 +169,24 @@ const Product = (props) => {
       total: total,
       cashback_return: product.cashback_return,
       sale_type_id: 1,
-      company_id: 1,
+      company_id: companyId,
       childs: objectChilds,
       comment: "oba",
+      company_name: props.route.params.company.name,
     };
-    props.addItem({ type: "ADD_ITEM_SALE", sale });
+    const verifySale = props.sale.every(
+      (item) => item.company_id === sale.company_id
+    );
+    if (verifySale) {
+      props.addItem({ type: "ADD_ITEM_SALE", sale });
+    } else {
+      setModalVisible(true);
+      setNewSale(sale);
+    }
+  }
+  function emptySale() {
+    props.resetSale(newSale);
+    setModalVisible(false);
   }
   return (
     <>
@@ -231,6 +243,11 @@ const Product = (props) => {
         total={total}
         quantity={quantity}
         onPress={addSale}
+      />
+      <ModalSale
+        modalVisible={modalVisible}
+        closeModal={() => setModalVisible(false)}
+        resetSale={() => emptySale()}
       />
     </>
   );

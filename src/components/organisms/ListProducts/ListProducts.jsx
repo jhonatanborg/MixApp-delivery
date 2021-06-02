@@ -25,6 +25,7 @@ const ListProducts = (props) => {
               navigation.navigate("Product", {
                 product: item,
                 categorie: groupProducts.name,
+                company: props.company,
               })
             }
             product={item}

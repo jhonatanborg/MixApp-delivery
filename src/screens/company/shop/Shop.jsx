@@ -109,7 +109,12 @@ const Shop = (props) => {
       </View>
       <SafeAreaView>
         {products.map((item) => {
-          return <ListProducts groupProducts={item} />;
+          return (
+            <ListProducts
+              groupProducts={item}
+              company={{ id: company.id, name: company.name }}
+            />
+          );
         })}
       </SafeAreaView>
     </ScrollView>

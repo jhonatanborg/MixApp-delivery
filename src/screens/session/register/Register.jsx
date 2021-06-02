@@ -32,8 +32,11 @@ export default function SignIn({ navigation }) {
         login: phone,
         password,
       };
+
       const response = await AUTH.signUp(user);
-      console.log(response.data);
+      if (response.data) {
+        navigation.navigate("Confirmation", phone);
+      }
     }
   }
 
