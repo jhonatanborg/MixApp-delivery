@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 
 import { connect } from "react-redux";
 import * as saleActions from "../../../store/actions/saleActions";
@@ -12,11 +13,21 @@ import { convertMoney } from "../../../utils";
 import Button from "../../../components/atoms/Button/Button";
 const { BASE_URL } = getEnvVars();
 const ListProducts = (props) => {
+  const navigation = useNavigation();
+
+  console.log(props);
   const sale = useSelector((state) => state.sale);
   const company_name = sale[0].company_name;
   function Total(index) {
     return sale[index].product_qtd * Number(sale[index].total);
   }
+  function subTotal() {
+    const subtotal = sale
+      .map((item) => Number(item.total) * item.product_qtd)
+      .reduce((prev, next) => prev + next);
+    return convertMoney(subtotal);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -27,8 +38,8 @@ const ListProducts = (props) => {
       </View>
       <FlatList
         data={sale}
-        keyExtractor={(item) => item.product_id}
-        renderItem={({ item, index, separators }) => (
+        keyExtractor={(item, index) => Number(item.product_id) + index}
+        renderItem={({ item, index }) => (
           <View onPress={props.onPress}>
             <View style={styles.card}>
               <View style={styles.content}>
@@ -76,7 +87,11 @@ const ListProducts = (props) => {
           </View>
         )}
       />
-      <Button name="Forma de pagamento" buttonColor={styles.buttonLogin} />
+      <Button
+        name={` Confirmar ${subTotal()}`}
+        buttonColor={styles.buttonLogin}
+        onPress={() => navigation.navigate("ConfirmationSale")}
+      />
     </View>
   );
 };

@@ -1,7 +1,5 @@
 import React from "react";
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-
 import styles from "./SaleEmpty.style";
 import image from "../../../assets/images/sale/sale-empty.png";
 

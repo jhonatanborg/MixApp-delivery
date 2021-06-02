@@ -6,8 +6,8 @@ export const DARK_BLUE = "#363F5F";
 
 // THEME
 export const THEMECOLOR = "#FF6C44";
-export const THEME_LIGHT = "#ffede8";
-export const BACKGROUND_APP = "#FBFBFB";
+export const THEME_LIGHT = "#FFDED6";
+export const BACKGROUND_APP = "#FBFAFF";
 
 // ACTIONS
 export const SUCCESS = "#3adb76";
