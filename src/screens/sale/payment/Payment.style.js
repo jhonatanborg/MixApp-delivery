@@ -34,13 +34,11 @@ const styles = StyleSheet.create({
     fontWeight: Typography.FONT_WEIGHT_REGULAR,
     fontFamily: Typography.FONT_FAMILY_REGULAR,
     flex: 3,
+    textTransform: "capitalize",
+    marginLeft: 8,
   },
-  listPayment: {
-    flexDirection: "row",
-  },
+
   image: {
-    width: 50,
-    height: 50,
     borderRadius: 8,
   },
   btn: {
@@ -60,13 +58,27 @@ const styles = StyleSheet.create({
     fontSize: Typography.FONT_SIZE_22,
     fontFamily: Typography.FONT_FAMILY_BOLD,
   },
+  listPayment: {
+    flexGrow: 1,
+  },
   card: {
     marginHorizontal: 5,
     backgroundColor: Colors.WHITE,
     padding: 15,
     borderRadius: 8,
+    width: "50%",
     marginVertical: 5,
-    flex: 2,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  cardSelected: {
+    marginHorizontal: 5,
+    backgroundColor: Colors.THEMECOLOR,
+    padding: 15,
+    borderRadius: 8,
+    width: "50%",
+    marginVertical: 5,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",

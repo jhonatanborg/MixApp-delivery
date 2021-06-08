@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  SafeAreaView,
+  FlatList,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
@@ -18,11 +20,12 @@ import Button from "../../../components/atoms/Button/Button";
 
 const Payment = (props) => {
   const company = useSelector((state) => state.company);
-  console.log(company.payment);
-  function payments() {
+  const [payments, setPayments] = useState([]);
+  const [paySelected, setPaySelected] = useState([]);
+  useEffect(() => {
     const groups = [];
-    const payments = company.payment;
-    payments.map((payment) => {
+    const newPayments = company.payment;
+    newPayments.map((payment) => {
       if (!groups.find((item) => item.id === payment.payment.group.id)) {
         groups.push(payment.payment.group);
       }
@@ -32,7 +35,7 @@ const Payment = (props) => {
     });
 
     groups.map((group) => {
-      payments.map((payment) => {
+      newPayments.map((payment) => {
         if (group.id === payment.payment.payment_group_available_id) {
           group.payments.push({
             id: payment.payment.id,
@@ -43,9 +46,32 @@ const Payment = (props) => {
       });
     });
 
-    return groups;
+    setPayments(groups);
+  }, []);
+  function selectPay(value) {
+    const pay = paySelected;
+    if (
+      pay.length > 0 &&
+      pay.filter((item) => item.id === value.id).length === 0
+    ) {
+      pay.push(value);
+    } else if (pay.length === 0) {
+      pay.push(value);
+    } else if (
+      pay.length > 0 &&
+      pay.filter((item) => item.id === value.id).length > 0
+    ) {
+      pay.forEach((item, index) => {
+        if (item.id === value.id) {
+          pay.splice(index, 1);
+        }
+      });
+    }
+    if (pay.length > 2) {
+      pay.splice(1, 1);
+    }
+    setPaySelected(pay);
   }
-  console.log(`${BASE_URL + "/uploads/payments/elo.svg"}`);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -58,27 +84,35 @@ const Payment = (props) => {
         </TouchableOpacity>
         <Text style={styles.heading2}>Selecione a forma de pagamento</Text>
       </View>
-      <ScrollView style={styles.section}>
-        <View>
-          <View>
-            <Text style={styles.heading1}>Cartão de crédito</Text>
-          </View>
-          <View style={styles.listPayment}>
-            <TouchableOpacity style={styles.card}>
-              <SvgUri uri={`${BASE_URL + "/uploads/payments/elo.svg"}`} />
+      <View style={styles.section}>
+        {payments.map((item) => {
+          return (
+            <View>
               <View>
-                <Text style={styles.text}>MasterCard</Text>
+                <Text style={styles.heading1}>{item.title}</Text>
               </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.card}>
-              <SvgUri uri={`${BASE_URL + "/uploads/payments/elo.svg"}`} />
               <View>
-                <Text style={styles.text}>MasterCard</Text>
+                {item.payments.map((pay) => {
+                  return (
+                    <TouchableOpacity
+                      key={pay.index}
+                      onPress={() => selectPay(pay)}
+                      style={styles.card}
+                    >
+                      <View style={styles.image}>
+                        <SvgUri uri={BASE_URL + pay.img} />
+                      </View>
+                      <View>
+                        <Text style={styles.text}>{pay.title}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
+            </View>
+          );
+        })}
+      </View>
       <View style={styles.footer}>
         <Button name="Confirmar" buttonColor={styles.icon} />
       </View>
