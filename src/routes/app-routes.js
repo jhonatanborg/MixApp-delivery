@@ -10,6 +10,7 @@ import { bindActionCreators } from "redux";
 import { useSelector } from "react-redux";
 
 import Account from "../screens/account/profile/Profile";
+import PurchaseList from "../screens/account/purchase/list/PurchaseList";
 import Search from "../screens/search/Search";
 import Shop from "../screens/company/shop/Shop";
 import Product from "../screens/company/product/Product";
@@ -101,6 +102,11 @@ const AppRoutes = () => {
         options={{ headerShown: false }}
         name="Payment"
         component={Payment}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="PurchaseList"
+        component={PurchaseList}
       />
     </Stack.Navigator>
   );
