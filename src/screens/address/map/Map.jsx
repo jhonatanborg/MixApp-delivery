@@ -29,7 +29,15 @@ const Map = (props) => {
     latitude: props.location.coords.latitude || -55.505736116319895,
     longitude: props.location.coords.longitude || 0.009999610483646393,
   });
-
+  function routeScreen() {
+    if (props.route.params) {
+      if (props.route.params.confirmation) {
+        props.navigation.navigate("ConfirmationSale");
+      }
+    } else {
+      props.navigation.goBack();
+    }
+  }
   return (
     <View style={styles.container}>
       <MapView
@@ -58,7 +66,7 @@ const Map = (props) => {
         <Button
           name="Confirmar endereço"
           buttonColor={styles.button}
-          onPress={() => props.navigation.goBack()}
+          onPress={routeScreen}
         />
       </SafeAreaView>
     </View>
