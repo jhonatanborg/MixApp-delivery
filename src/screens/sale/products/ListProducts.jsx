@@ -14,8 +14,6 @@ import Button from "../../../components/atoms/Button/Button";
 const { BASE_URL } = getEnvVars();
 const ListProducts = (props) => {
   const navigation = useNavigation();
-
-  console.log(props);
   const sale = useSelector((state) => state.sale);
   const company_name = sale[0].company_name;
   function Total(index) {
@@ -38,7 +36,7 @@ const ListProducts = (props) => {
       </View>
       <FlatList
         data={sale}
-        keyExtractor={(item, index) => Number(item.product_id) + index}
+        keyExtractor={(item, index) => index}
         renderItem={({ item, index }) => (
           <View onPress={props.onPress}>
             <View style={styles.card}>
