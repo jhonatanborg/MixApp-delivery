@@ -18,3 +18,7 @@ export const SubQtdItem = (item) => ({
   type: "SUB_QUANTITY",
   payload: item,
 });
+export const AddPay = (item) => ({
+  type: "ADD_PAYMENT",
+  payload: item,
+});

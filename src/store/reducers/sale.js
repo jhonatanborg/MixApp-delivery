@@ -2,6 +2,14 @@ export default function sale(state = [], action) {
   switch (action.type) {
     case "ADD_ITEM_SALE":
       const newSale = [...state, action.payload.sale];
+      newSale.payment = [
+        {
+          id: 15,
+          title: "dinheiro",
+          img: "/uploads/payments/dinheiro.svg",
+          select: true,
+        },
+      ];
       return newSale;
     case "REMOVE_ITEM_SALE":
       return state.filter((item, index) => index !== action.payload);
@@ -27,6 +35,11 @@ export default function sale(state = [], action) {
       const newResetSale = [];
       newResetSale.push(action.payload);
       return newResetSale;
+    case "ADD_PAYMENT":
+      const newSaleWhitPay = state;
+      const payments = action.payload;
+      newSaleWhitPay.payment = payments;
+      console.log("foi aqui", newSaleWhitPay);
     default:
       return state;
   }
