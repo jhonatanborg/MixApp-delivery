@@ -233,6 +233,7 @@ const Product = (props) => {
             <Text style={styles.text}>{product.description}</Text>
           </View>
         </View>
+
         <ListComplements
           onPress={(item, category, limit) =>
             AddMountComplements(item, category, limit)

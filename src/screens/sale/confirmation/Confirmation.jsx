@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -7,15 +7,59 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-
+const { BASE_URL } = getEnvVars();
+import getEnvVars from "../../../../environment";
 import styles from "./Confirmation.style";
 import Button from "../../../components/atoms/Button/Button";
+import { SvgUri } from "react-native-svg";
+import { PURCHASE } from "../../../services/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import AuthContext from "../../../contexts/index";
 
 const ConfirmationSale = (props) => {
+  const { signed, signOut, user } = useContext(AuthContext);
+  console.log(user);
   const address = useSelector((state) => state.location.address);
-  console.log(props);
+  const payment = useSelector((state) => state.sale.payment);
+  const saleItems = useSelector((state) => state.sale);
+  const company = useSelector((state) => state.company);
+  async function handlePurchase() {
+    const newSale = [];
+    saleItems.forEach((item) => {
+      console.log(item);
+      const childs = [];
+      if (item.childs.length > 0) {
+        item.childs.forEach((child) => {
+          childs.push({ product_id: child.product_id });
+        });
+      }
+      newSale.push({
+        product_id: item.product_id,
+        comment: item.comment,
+        product_qtd: item.product_qtd,
+        childs: childs,
+      });
+    });
+
+    let paymentsArray = [];
+    payment.forEach((element) => {
+      paymentsArray.push(element.id);
+    });
+    let sale = {
+      address: address,
+      saleItems: newSale,
+      type: "online",
+      change_for: null,
+      cupom: null,
+      payment_available_id: paymentsArray,
+      company_id: company.id,
+      ispromotion: false,
+    };
+    console.log(sale);
+    const response = await PURCHASE.sendPurchase(sale, user.token);
+  }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -42,8 +86,17 @@ const ConfirmationSale = (props) => {
                 ? `${address.street}, ${address.number} - ${address.district}`
                 : "Buscar endereço"}
             </Text>
-
-            <Feather name="edit" size={24} color={styles.btnIconColor.color} />
+            <TouchableOpacity
+              onPress={() =>
+                props.navigation.navigate("Map", { confirmation: true })
+              }
+            >
+              <Feather
+                name="edit"
+                size={24}
+                color={styles.btnIconColor.color}
+              />
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.card}>
@@ -51,9 +104,20 @@ const ConfirmationSale = (props) => {
             <Text style={styles.cardTitle}>Forma de pagamento:</Text>
           </View>
           <View style={styles.content}>
-            <Text numberOfLines={2} style={styles.text}>
-              Dinheiro
-            </Text>
+            <View style={{ flexDirection: "row" }}>
+              {payment.map((item, index) => {
+                return (
+                  <TouchableOpacity key={index} style={styles.cardPay}>
+                    <View style={styles.image}>
+                      <SvgUri uri={BASE_URL + item.img} />
+                    </View>
+                    <View>
+                      <Text style={styles.textPay}>{item.title}</Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
             <TouchableOpacity
               onPress={() => props.navigation.navigate("Payment")}
             >
@@ -116,7 +180,11 @@ const ConfirmationSale = (props) => {
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <Button name="Fazer Pedido" buttonColor={styles.icon} />
+        <Button
+          name="Fazer Pedido"
+          onPress={handlePurchase}
+          buttonColor={styles.icon}
+        />
       </View>
     </View>
   );
