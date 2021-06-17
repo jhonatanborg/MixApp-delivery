@@ -14,8 +14,9 @@ import { PURCHASE } from "../../../../services/api";
 import AuthContext from "../../../../contexts/index";
 
 const PurchaseList = (props) => {
-  const { signed, signOut, user } = useContext(AuthContext);
-  const [purchases, setPurchases] = useState([]);
+  const { user } = useContext(AuthContext);
+  const [purchasesData, setPurchases] = useState([]);
+  const [pendings, setPendings] = useState([]);
   useEffect(() => {
     async function fetchPurchase() {
       const response = await PURCHASE.getPurchases(user.token);
@@ -29,7 +30,23 @@ const PurchaseList = (props) => {
           color: statusPurchase(item.status),
         });
       });
-      setPurchases(purchases);
+      setPendings(
+        purchases.filter(
+          (item) =>
+            item.status !== "Entregue" &&
+            item.status !== "Cancelado" &&
+            item.status !== "Finalizado" &&
+            item.status !== "Pronto"
+        )
+      );
+      setPurchases(
+        purchases.filter(
+          (item) =>
+            (item.status === "Pronto") |
+            (item.status === "Entregue") |
+            (item.status === "Cancelado")
+        )
+      );
     }
     fetchPurchase();
   }, []);
@@ -64,27 +81,58 @@ const PurchaseList = (props) => {
   }
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <View>
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => {
-              props.navigation.goBack();
-            }}
-          >
-            <Feather name="chevron-left" size={24} color={"black"} />
-          </TouchableOpacity>
+      <View style={styles.section}>
+        <View style={styles.header}>
+          <View>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => {
+                props.navigation.goBack();
+              }}
+            >
+              <Feather
+                name="chevron-left"
+                size={24}
+                color={styles.icon.backgroundColor}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.headerTitle}>
+            <Text style={styles.titleScreen}>Meus pedidos</Text>
+          </View>
         </View>
-        <View style={styles.headerTitle}>
-          <Text style={styles.titleScreen}>Meus pedidos</Text>
-        </View>
+        {pendings.length > 0 && (
+          <View>
+            <Text style={styles.subTitle}>Em produção</Text>
+            {pendings.map((item) => {
+              return (
+                <CardPurchase
+                  purchase={item}
+                  onPress={() =>
+                    props.navigation.navigate("PurchaseDetails", item)
+                  }
+                />
+              );
+            })}
+          </View>
+        )}
       </View>
-      <View>
+      <View style={styles.list}>
         <SafeAreaView>
+          <View style={styles.heading}>
+            <Text style={styles.heading1}>Todos os pedidos</Text>
+          </View>
           <FlatList
-            data={purchases}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <CardPurchase purchase={item} />}
+            data={purchasesData}
+            keyExtractor={(item) => Number(item.id)}
+            renderItem={({ item }) => (
+              <CardPurchase
+                onPress={() =>
+                  props.navigation.navigate("PurchaseDetails", item)
+                }
+                purchase={item}
+              />
+            )}
           />
         </SafeAreaView>
       </View>
