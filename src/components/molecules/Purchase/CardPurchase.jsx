@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import styles from "./CardPurchase.style";
 import getEnvVars from "../../../../environment";
 import { convertMoney } from "../../../utils";
@@ -9,10 +9,8 @@ const image = {
   uri: "https://images.pexels.com/photos/4109132/pexels-photo-4109132.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
 };
 const CardPurchase = (props) => {
-  console.log(props);
-
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={props.onPress}>
       <View style={styles.contain}>
         <Image
           style={styles.tinyLogo}
@@ -50,7 +48,7 @@ const CardPurchase = (props) => {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
