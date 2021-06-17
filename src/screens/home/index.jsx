@@ -40,7 +40,6 @@ const Home = (props) => {
     });
     props.setCoords(location.coords);
     props.setAddress(response.data);
-    console.log("veio aqui");
   }
   useEffect(() => {
     async function fetchCategories() {
@@ -125,4 +124,5 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(addressActions, dispatch);
+
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -20,7 +20,6 @@ const Payment = (props) => {
   console.log(props);
   const company = useSelector((state) => state.company);
   const dispatch = useDispatch();
-  console.log(dispatch);
   const [payments, setPayments] = useState([]);
   const [paySelected, setPaySelected] = useState([]);
   useEffect(() => {

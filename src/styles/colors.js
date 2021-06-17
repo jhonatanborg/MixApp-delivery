@@ -5,7 +5,7 @@ export const BLACK = "#111a2c";
 export const DARK_BLUE = "#363F5F";
 
 // THEME
-export const THEMECOLOR = "#FF6C44";
+export const THEMECOLOR = "#5530E5";
 export const THEME_LIGHT = "#FFDED6";
 export const BACKGROUND_APP = "#FBFAFF";
 

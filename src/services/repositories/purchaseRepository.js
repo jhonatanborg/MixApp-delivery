@@ -20,4 +20,12 @@ export default {
         Authorization: `Bearer ${token}`,
       },
     }),
+  getPurchase: (id, token) =>
+    instance({
+      method: "GET",
+      url: `/sale/${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }),
 };

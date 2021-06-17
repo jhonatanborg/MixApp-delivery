@@ -190,7 +190,6 @@ const Product = (props) => {
     props.resetSale(newSale);
     setModalVisible(false);
   }
-  console.log(props);
 
   return (
     <>
