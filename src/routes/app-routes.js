@@ -8,7 +8,6 @@ import HomeScreen from "../screens/home/index";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { useSelector } from "react-redux";
-
 import Account from "../screens/account/profile/Profile";
 import PurchaseList from "../screens/account/purchase/list/PurchaseList";
 import Search from "../screens/search/Search";
@@ -18,6 +17,7 @@ import Sale from "../screens/sale/main";
 import Map from "../screens/address/map/Map";
 import ConfirmationSale from "../screens/sale/confirmation/Confirmation";
 import Payment from "../screens/sale/payment/Payment";
+import PurchaseDetails from "../screens/account/purchase/details/PurchaseDetails";
 const Tab = createMaterialBottomTabNavigator();
 
 const Stack = createStackNavigator();
@@ -107,6 +107,11 @@ const AppRoutes = () => {
         options={{ headerShown: false }}
         name="PurchaseList"
         component={PurchaseList}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="PurchaseDetails"
+        component={PurchaseDetails}
       />
     </Stack.Navigator>
   );

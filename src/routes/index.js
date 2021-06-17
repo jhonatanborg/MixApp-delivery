@@ -8,7 +8,6 @@ import AuthContext from "../contexts/";
 
 const Routes = () => {
   const { signed, loading } = useContext(AuthContext);
-
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItem: "center" }}>
@@ -16,7 +15,6 @@ const Routes = () => {
       </View>
     );
   }
-
   return signed ? <AppRoutes /> : <AuthRoutes />;
 };
 
