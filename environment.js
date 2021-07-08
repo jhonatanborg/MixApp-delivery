@@ -5,11 +5,11 @@ const ENV = {
     BASE_URL: "https://server.mixentregas.com.br",
   },
   staging: {
-    apiUrl: "[your.staging.api.here]",
+    BASE_URL: "https://server.mixentregas.com.br",
     amplitudeApiKey: "[Enter your key here]",
   },
   prod: {
-    apiUrl: "[your.production.api.here]",
+    BASE_URL: "https://server.mixentregas.com.br",
     amplitudeApiKey: "[Enter your key here]",
     // Add other keys you want here
   },
