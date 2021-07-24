@@ -1,23 +1,16 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  FlatList,
-} from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
 const { BASE_URL } = getEnvVars();
-import getEnvVars from "../../../../environment";
-import { SvgUri } from "react-native-svg";
+import getEnvVars from '../../../../environment';
+import { SvgUri } from 'react-native-svg';
 
-import styles from "./Payment.style";
-import Button from "../../../components/atoms/Button/Button";
-import * as saleActions from "../../../store/actions/saleActions";
+import styles from './Payment.style';
+import Button from '../../../components/atoms/Button/Button';
+import * as payActions from '../../../store/actions/payActions';
 
 const Payment = (props) => {
-  console.log(props);
   const company = useSelector((state) => state.company);
   const dispatch = useDispatch();
   const [payments, setPayments] = useState([]);
@@ -94,7 +87,7 @@ const Payment = (props) => {
         }
       });
     });
-    dispatch(saleActions.AddPay(payment_available_id));
+    dispatch(payActions.addPay(payment_available_id));
     props.navigation.goBack();
   }
   return (

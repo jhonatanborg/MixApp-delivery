@@ -1,10 +1,10 @@
-import React from "react";
-import { View, Text, FlatList } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React from 'react';
+import { View, Text, FlatList } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-import styles from "./ListProducts.style";
-import getEnvVars from "../../../../environment";
-import CardProduct from "../../molecules/Product/CardProduct";
+import styles from './ListProducts.style';
+import getEnvVars from '../../../../environment';
+import CardProduct from '../../molecules/Product/CardProduct';
 const { BASE_URL } = getEnvVars();
 
 const ListProducts = (props) => {
@@ -17,12 +17,12 @@ const ListProducts = (props) => {
       </View>
       <FlatList
         data={groupProducts.products}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item, index, separators }) => (
           <CardProduct
             key={index.toString()}
             onPress={() =>
-              navigation.navigate("Product", {
+              navigation.navigate('Product', {
                 product: item,
                 categorie: groupProducts.name,
                 company: props.company,

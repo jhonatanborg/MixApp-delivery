@@ -1,21 +1,22 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, FlatList, Image } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
-import { connect } from "react-redux";
-import * as saleActions from "../../../store/actions/saleActions";
-import { bindActionCreators } from "redux";
-import styles from "./ListProducts.style";
-import getEnvVars from "../../../../environment";
-import { convertMoney } from "../../../utils";
-import Button from "../../../components/atoms/Button/Button";
+import { connect } from 'react-redux';
+import * as saleActions from '../../../store/actions/saleActions';
+import { bindActionCreators } from 'redux';
+import styles from './ListProducts.style';
+import getEnvVars from '../../../../environment';
+import { convertMoney } from '../../../utils';
+import Button from '../../../components/atoms/Button/Button';
 const { BASE_URL } = getEnvVars();
 const ListProducts = (props) => {
   const navigation = useNavigation();
   const sale = useSelector((state) => state.sale);
-  const company_name = sale[0].company_name;
+  console.log(sale);
+  const company = useSelector((state) => state.company);
   function Total(index) {
     return sale[index].product_qtd * Number(sale[index].total);
   }
@@ -31,7 +32,7 @@ const ListProducts = (props) => {
       <View style={styles.header}>
         <View style={styles.headerTitle}>
           <Text style={styles.titleScreen}>Minha sacola</Text>
-          <Text style={styles.heading1}>{company_name}</Text>
+          <Text style={styles.heading1}>{company.name}</Text>
         </View>
       </View>
       <FlatList
@@ -88,7 +89,7 @@ const ListProducts = (props) => {
       <Button
         name={` Confirmar ${subTotal()}`}
         buttonColor={styles.buttonLogin}
-        onPress={() => navigation.navigate("ConfirmationSale")}
+        onPress={() => navigation.navigate('ConfirmationSale')}
       />
     </View>
   );

@@ -51,12 +51,14 @@ const Map = (props) => {
       <SafeAreaView style={styles.footer}>
         <Text style={styles.heading1}>Endereço para entrega:</Text>
         <View style={styles.content}>
-          <MaterialCommunityIcons
+          <View >
+            <MaterialCommunityIcons
             name="map-marker-outline"
             size={28}
             color={styles.icon.backgroundColor}
           />
-          <Text numberOfLines={2} style={styles.text}>
+          </View>
+          <Text numberOfLines={3} style={styles.text}>
             {address && address.street
               ? `${address.street},${address.number} - ${address.district}`
               : "Buscar endereço"}

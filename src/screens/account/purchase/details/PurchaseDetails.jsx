@@ -1,22 +1,29 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import ProgressBar from "react-native-progress/Bar";
 import { PURCHASE } from "../../../../services/api";
 import AuthContext from "../../../../contexts/index";
+import { convertMoney } from "../../../../utils/index";
 import styles from "./PurchaseDetails.style";
 const PurchaseDetails = (props) => {
   const { signed, signOut, user } = useContext(AuthContext);
-  const [purchase, setPurchase] = useState({});
+  const [purchase, setPurchase] = useState(props.route.params);
+  const [address, setAddress] = useState(props.route.params.address);
+  const [itemsPurchase, setItemsPurchase] = useState(
+    groupSubcategories(props.route.params.itens)
+  );
   useEffect(() => {
     async function fetchPurchase() {
-      const response = await PURCHASE.getPurchase(
-        props.route.params.id,
-        user.token
-      );
+      const response = await PURCHASE.getPurchase(purchase.id, user.token);
+      setItemsPurchase(groupSubcategories(response.data.itens));
       setPurchase(response.data);
     }
-    fetchPurchase();
+    const timeout = setTimeout(() => {
+      fetchPurchase();
+    }, 20000);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   function statusPurchase(statePurchase) {
@@ -98,6 +105,40 @@ const PurchaseDetails = (props) => {
     }
     return status;
   }
+  function groupSubcategories(items) {
+    const childItems = [];
+    items.map((item) => {
+      childItems.push(...item.childItem);
+    });
+
+    const subcategories = [];
+
+    childItems.map((item) => {
+      item.product.subcategory.sale_item_id = item.parent_sale_item;
+      if (
+        !subcategories.find(
+          (item2) =>
+            item.product.subcategory.id === item2.id &&
+            item.parent_sale_item === item2.sale_item_id
+        )
+      ) {
+        subcategories.push(item.product.subcategory);
+      }
+    });
+    subcategories.map((sub) => {
+      sub.products = [];
+      childItems.map((item) => {
+        if (
+          item.product.subcategory.id === sub.id &&
+          sub.sale_item_id === item.parent_sale_item
+        ) {
+          item.product.qtd = item.product_qtd;
+          sub.products.push(item.product);
+        }
+      });
+    });
+    return subcategories;
+  }
 
   return (
     <View style={styles.container}>
@@ -157,59 +198,57 @@ const PurchaseDetails = (props) => {
             </Text>
           </View>
         </View>
-        <View style={styles.list}>
+        <ScrollView style={styles.list}>
           <View style={styles.section2}>
             <Text style={styles.heading1}>Itens do pedido</Text>
           </View>
+          {console.log(itemsPurchase)}
           <View style={styles.card}>
-            <View style={styles.listItem}>
-              <View style={styles.listItemContent}>
-                <Text style={styles.text}>1x Caldo 500ML</Text>
-                <Text style={styles.price}>R$ 15,00</Text>
-              </View>
-              <View style={styles.listItemSub}>
-                <View style={styles.listItemContent}>
-                  <Text style={styles.text}> + Pão</Text>
-                  <Text style={styles.price2}>R$ 2,00</Text>
-                </View>
-              </View>
-            </View>
-            <View style={styles.listItem}>
-              <View style={styles.listItemContent}>
-                <Text style={styles.text}>1x Caldo 500ML</Text>
-                <Text style={styles.price}>R$ 15,00</Text>
-              </View>
-              <View style={styles.listItemSub}>
-                <View style={styles.listItemContent}>
-                  <Text style={styles.text}> + Pão</Text>
-                  <Text style={styles.price2}>R$ 2,00</Text>
-                </View>
-              </View>
-            </View>
-            <View style={styles.listItem}>
-              <View style={styles.listItemContent}>
-                <Text style={styles.text}>1x Caldo 500ML</Text>
-                <Text style={styles.price}>R$ 15,00</Text>
-              </View>
-              <View style={styles.listItemSub}>
-                <View style={styles.listItemContent}>
-                  <Text style={styles.text}> + Pão</Text>
-                  <Text style={styles.price2}>R$ 2,00</Text>
-                </View>
-              </View>
-            </View>
-            <View style={styles.listItem}>
-              <View style={styles.listItemContent}>
-                <Text style={styles.text}>1x Caldo 500ML</Text>
-                <Text style={styles.price}>R$ 15,00</Text>
-              </View>
-              <View style={styles.listItemSub}>
-                <View style={styles.listItemContent}>
-                  <Text style={styles.text}> + Pão</Text>
-                  <Text style={styles.price2}>R$ 2,00</Text>
-                </View>
-              </View>
-            </View>
+            {purchase &&
+              purchase.itens.map((item) => {
+                return (
+                  <View style={styles.listItem}>
+                    <View style={styles.listItemContent}>
+                      <Text style={styles.text2}>{item.product.name}</Text>
+                      <Text style={styles.price}>
+                        {convertMoney(item.subtotal)}
+                      </Text>
+                    </View>
+                    {item.childItem.length > 0 &&
+                      itemsPurchase.map((subcategory) => {
+                        return (
+                          item.id === subcategory.sale_item_id && (
+                            <View>
+                              <View>
+                                <Text style={styles.heading1}>
+                                  {subcategory.name}
+                                </Text>
+                              </View>
+                              {subcategory.products.map((child) => {
+                                return (
+                                  <View style={styles.listItemSub}>
+                                    <View style={styles.listItemContent}>
+                                      <Text
+                                        style={styles.text}
+                                      >{` ${child.qtd}x ${child.name}`}</Text>
+                                      <Text style={styles.price2}>
+                                        {convertMoney(
+                                          parseFloat(
+                                            child.sale_value * child.qtd
+                                          ).toFixed(2)
+                                        )}
+                                      </Text>
+                                    </View>
+                                  </View>
+                                );
+                              })}
+                            </View>
+                          )
+                        );
+                      })}
+                  </View>
+                );
+              })}
           </View>
           <View style={styles.section2}>
             <View>
@@ -218,7 +257,9 @@ const PurchaseDetails = (props) => {
             <View style={styles.card}>
               <View style={styles.content2}>
                 <Text numberOfLines={2} style={styles.text}>
-                  Rua amendoeiras, 49 - Setor Comercial
+                  {address && address.street
+                    ? `${address.street},${address.number} - ${address.district} `
+                    : "Retirada"}
                 </Text>
               </View>
             </View>
@@ -234,7 +275,7 @@ const PurchaseDetails = (props) => {
                 </Text>
                 <View>
                   <Text numberOfLines={2} style={styles.text}>
-                    R$ 15,00
+                    {convertMoney(purchase.subtotal)}
                   </Text>
                 </View>
               </View>
@@ -244,7 +285,7 @@ const PurchaseDetails = (props) => {
                 </Text>
                 <View>
                   <Text numberOfLines={2} style={styles.text}>
-                    R$ 5,00
+                    {convertMoney(purchase.delivery_value)}
                   </Text>
                 </View>
               </View>
@@ -255,13 +296,13 @@ const PurchaseDetails = (props) => {
                 </Text>
                 <View>
                   <Text numberOfLines={2} style={styles.price}>
-                    R$ 20,00
+                    {convertMoney(purchase.total)}
                   </Text>
                 </View>
               </View>
             </View>
           </View>
-        </View>
+        </ScrollView>
       </View>
     </View>
   );

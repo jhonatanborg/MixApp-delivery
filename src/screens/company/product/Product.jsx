@@ -1,31 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  ImageBackground,
   ScrollView,
-} from "react-native";
-import styles from "./Product.style";
-import { AntDesign } from "@expo/vector-icons";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as saleActions from "../../../store/actions/saleActions";
-import * as companyActions from "../../../store/actions/companyActions";
-import Icon from "@expo/vector-icons/Entypo";
-import getEnvVars from "../../../../environment";
-import { convertMoney } from "../../../utils";
-const { BASE_URL } = getEnvVars();
-
-import { PRODUCT } from "../../../services/api";
-import BottomBar from "../../../components/molecules/BottomBar/BottomBar";
-import ModalSale from "../../../components/molecules/ModalSale/ModalSale";
-import ListComplements from "../../../components/organisms/ListComplements/ListComplements";
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  View,
+} from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as saleActions from '../../../store/actions/saleActions';
+import * as companyActions from '../../../store/actions/companyActions';
+import { PRODUCT } from '../../../services/api';
+import styles from './Product.style';
+import BottomBar from '../../../components/molecules/BottomBar/BottomBar';
+import ModalSale from '../../../components/molecules/ModalSale/ModalSale';
+import ListComplements from '../../../components/organisms/ListComplements/ListComplements';
+import HeaderProduct from '../../../components/molecules/HeaderProduct/HeaderProduct';
+import InputText from '../../../components/atoms/InputText/InputText';
 const Product = (props) => {
   const [complements, setComplements] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
+  const [comment, setCommentItem] = useState(null);
   const [listanova, setListaNova] = useState([]);
   const [total, setTotal] = useState(props.route.params.product.sale_value);
   const [totalComplements, setTotalComplements] = useState(0);
@@ -38,6 +35,7 @@ const Product = (props) => {
       );
       setComplements(response.data.childs);
       setProduct(response.data.product);
+      console.log(response.data.product);
       setTotal(response.data.product.sale_value);
     }
     fetchComplements();
@@ -172,14 +170,14 @@ const Product = (props) => {
       sale_type_id: 1,
       company_id: companyId,
       childs: objectChilds,
-      comment: "oba",
+      comment: 'oba',
       company_name: props.route.params.company.name,
     };
     const verifySale = props.sale.every(
       (item) => item.company_id === sale.company_id
     );
     if (verifySale) {
-      props.addItem({ type: "ADD_ITEM_SALE", sale });
+      props.addItem({ type: 'ADD_ITEM_SALE', sale });
       props.setCompanySale({ ...props.route.params.company });
     } else {
       setModalVisible(true);
@@ -193,66 +191,46 @@ const Product = (props) => {
 
   return (
     <>
-      <ScrollView>
-        <ImageBackground
-          style={styles.image}
-          source={{ uri: `${BASE_URL + props.route.params.product.img}` }}
-        >
-          <View style={styles.overlay}>
-            <View style={styles.headerTop}>
-              <TouchableOpacity
-                style={styles.backButton}
-                onPress={props.onPress}
-              >
-                <AntDesign name="left" size={24} color="#FFFFFF" />
-              </TouchableOpacity>
-              <View style={{ width: "80%", alignItems: "center" }}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    alignSelf: "center",
-                  }}
-                ></View>
-              </View>
-              <View>
-                <Icon name="heart" color="#f9dd7a" size={30} />
-              </View>
-            </View>
-          </View>
-        </ImageBackground>
-        <View style={styles.details}>
-          <View style={styles.content}>
-            <Text numberOfLines={2} style={styles.title}>
-              {product.name}
-            </Text>
-            <Text style={styles.price}>{convertMoney(product.sale_value)}</Text>
-          </View>
-          <View>
-            <Text style={styles.text}>{product.description}</Text>
-          </View>
-        </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
+        enabled
+      >
+        <ScrollView style={{ backgroundColor: '#febb', zIndex: 0 }}>
+          <HeaderProduct {...product} />
 
-        <ListComplements
-          onPress={(item, category, limit) =>
-            AddMountComplements(item, category, limit)
-          }
-          removeComplements={RemoveMountComplements}
-          complements={complements}
+          {product.mount === 'S' && (
+            <ListComplements
+              onPress={(item, category, limit) =>
+                AddMountComplements(item, category, limit)
+              }
+              removeComplements={RemoveMountComplements}
+              complements={complements}
+            />
+          )}
+          <View style={styles.comment}>
+            <Text style={styles.titleInput}>Comentário</Text>
+            <InputText
+              handleInput={(value) => setCommentItem(value)}
+              placeholder="Algum comentário para esse item?"
+              numberOfLines={3}
+              multiline={true}
+            />
+          </View>
+        </ScrollView>
+        <BottomBar
+          AddQuantity={AddQuantityItem}
+          DecraseQuantity={DecraseQuantityItem}
+          total={total}
+          quantity={quantity}
+          onPress={addSale}
         />
-      </ScrollView>
-      <BottomBar
-        AddQuantity={AddQuantityItem}
-        DecraseQuantity={DecraseQuantityItem}
-        total={total}
-        quantity={quantity}
-        onPress={addSale}
-      />
-      <ModalSale
-        modalVisible={modalVisible}
-        closeModal={() => setModalVisible(false)}
-        resetSale={() => emptySale()}
-      />
+        <ModalSale
+          modalVisible={modalVisible}
+          closeModal={() => setModalVisible(false)}
+          resetSale={() => emptySale()}
+        />
+      </KeyboardAvoidingView>
     </>
   );
 };

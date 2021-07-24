@@ -28,6 +28,11 @@ const PurchaseList = (props) => {
           company: item.company,
           status: item.status,
           color: statusPurchase(item.status),
+          itens: item.itens,
+          address: item.deliveryAddress,
+          delivery_value: item.delivery_value,
+          subtotal: item.subtotal,
+          total: item.total,
         });
       });
       setPendings(

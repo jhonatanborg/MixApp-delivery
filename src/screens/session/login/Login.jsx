@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState } from 'react';
 import {
   KeyboardAvoidingView,
   View,
@@ -9,28 +9,28 @@ import {
   TouchableWithoutFeedback,
   Platform,
   Keyboard,
-} from "react-native";
+} from 'react-native';
 
-import AuthContext from "../../../contexts/index";
-import Button from "../../../components/atoms/Button/Button";
-import { AUTH } from "../../../services/api";
+import AuthContext from '../../../contexts/index';
+import Button from '../../../components/atoms/Button/Button';
+import { AUTH } from '../../../services/api';
 
-import styles from "./Login.styles";
-import logo from "../../../assets/images/logo-app.png";
+import styles from './Login.styles';
+import logo from '../../../assets/images/logo-app.png';
 export default function SignIn({ navigation }) {
-  const [login, setLogin] = useState("jhonatanborgesdj@gmail.com");
-  const [password, setPassword] = useState("001001");
+  const [login, setLogin] = useState('jhonatanborgesdj@gmail.com');
+  const [password, setPassword] = useState('001001');
   const { signed, signIn } = useContext(AuthContext);
   async function handleSignIn() {
     await signIn(login, password);
   }
   function register() {
-    navigation.navigate("RegisterScreen");
+    navigation.navigate('RegisterScreen');
   }
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
       <View style={styles.header}>
