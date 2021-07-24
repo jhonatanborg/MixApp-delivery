@@ -1,21 +1,18 @@
-import { StyleSheet } from "react-native";
-import { Typography, Colors, Spacing } from "../../../styles";
+import { StyleSheet } from 'react-native';
+import { Typography, Colors, Spacing } from '../../../styles';
 
 const styles = StyleSheet.create({
   sectionInput: {
-    height: 60,
     borderWidth: 0,
     backgroundColor: Colors.GRAY_LIGHT,
-    borderRadius: 12,
+    borderRadius: 8,
     paddingHorizontal: 15,
     color: Colors.GRAY_DARK,
-    justifyContent: "flex-start",
-    flexDirection: "row",
-    alignItems: "center",
   },
   input: {
     borderWidth: 0,
-    backgroundColor: Colors.GRAY_LIGHT,
+    borderRadius: 12,
+    height: 60,
     color: Colors.GRAY_DARK,
     fontSize: Typography.FONT_SIZE_22,
     fontWeight: Typography.FONT_WEIGHT_REGULAR,

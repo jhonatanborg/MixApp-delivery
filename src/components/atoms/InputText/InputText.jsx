@@ -1,20 +1,17 @@
-import React from "react";
-import { View, TextInput } from "react-native";
-import styles from "./InputText.style";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import productRepository from "src/services/repositories/productRepository";
+import React from 'react';
+import { View, TextInput } from 'react-native';
+import styles from './InputText.style';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const InputText = () => (
+const InputText = ({ placeholder, numberOfLines, multiline }) => (
   <View style={styles.sectionInput}>
-    <MaterialCommunityIcons
-      name="magnify"
-      size={24}
-      color={styles.icon.color}
-    />
     <TextInput
       style={styles.input}
-      onChangeText={handleInput}
-      placeholder="Buscar"
+      underlineColorAndroid="transparent"
+      placeholder={placeholder}
+      placeholderTextColor="grey"
+      numberOfLines={numberOfLines}
+      multiline={multiline}
     />
   </View>
 );
