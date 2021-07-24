@@ -86,6 +86,13 @@ const styles = StyleSheet.create({
     fontFamily: Typography.FONT_FAMILY_REGULAR,
     textTransform: "capitalize",
   },
+  text2: {
+    color: Colors.GRAY_DARK,
+    fontSize: Typography.FONT_SIZE_22,
+    fontWeight: Typography.FONT_WEIGHT_REGULAR,
+    fontFamily: Typography.FONT_FAMILY_BOLD,
+    textTransform: "capitalize",
+  },
   price: {
     color: Colors.GRAY_DARK,
     fontSize: Typography.FONT_SIZE_22,

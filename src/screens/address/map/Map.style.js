@@ -43,6 +43,8 @@ const styles = StyleSheet.create({
     color: Colors.GRAY_DARK,
     fontSize: Typography.FONT_SIZE_22,
     fontFamily: Typography.FONT_FAMILY_BOLD,
+        paddingHorizontal:10,
+
   },
   button: {
     backgroundColor: Colors.THEMECOLOR,
@@ -55,11 +57,11 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "flex-start",
   },
   icon: {
     backgroundColor: Colors.GRAY_DARK,
-    padding: 5,
+    padding: 10,
   },
 });
 
