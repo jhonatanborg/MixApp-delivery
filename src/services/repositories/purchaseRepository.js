@@ -1,28 +1,28 @@
-import instance from "../config/config";
-import getEnvVars from "../../../environment";
-import axios from "axios";
+import instance from '../config/config';
 
-const { BASE_URL } = getEnvVars();
 export default {
   sendPurchase: (sale, token) =>
     instance({
+      method: 'POST',
       url: `/sale`,
       headers: {
         Authorization: `Bearer ${token}`,
       },
       data: sale,
-    }),
+    })
+      .then((res) => console.log(resp))
+      .catch((err) => console.log(err)),
   getPurchases: (token) =>
     instance({
-      method: "GET",
-      url: "/my-purchase",
+      method: 'GET',
+      url: '/my-purchase',
       headers: {
         Authorization: `Bearer ${token}`,
       },
     }),
   getPurchase: (id, token) =>
     instance({
-      method: "GET",
+      method: 'GET',
       url: `/sale/${id}`,
       headers: {
         Authorization: `Bearer ${token}`,
