@@ -14,15 +14,16 @@ import {
 import AuthContext from '../../../contexts/index';
 import Button from '../../../components/atoms/Button/Button';
 import { AUTH } from '../../../services/api';
-
+import InputText from '../../../components/atoms/InputText/InputText';
 import styles from './Login.styles';
 import logo from '../../../assets/images/logo-app.png';
+import { useLoginFormState } from '../../../hooks/useForm';
 export default function SignIn({ navigation }) {
-  const [login, setLogin] = useState('jhonatanborgesdj@gmail.com');
-  const [password, setPassword] = useState('001001');
+  const { email, password, submit } = useLoginFormState();
+
   const { signed, signIn } = useContext(AuthContext);
   async function handleSignIn() {
-    await signIn(login, password);
+    await signIn(email, password);
   }
   function register() {
     navigation.navigate('RegisterScreen');
@@ -40,46 +41,45 @@ export default function SignIn({ navigation }) {
         </View>
         <View style={styles.headerContent}>
           <Text style={styles.description}>
-            Faça login ou crie uma conta no mix para começar {(login, password)}
+            Faça login ou crie uma conta no mix para começar
           </Text>
         </View>
-        <View style={styles.form}>
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>E-mail</Text>
-            <TextInput
-              style={styles.input}
-              defaultValue="jhonatanborgesdj@gmail.com"
-              onChangeText={(value) => setLogin(value)}
-            />
-          </View>
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Senha</Text>
-            <TextInput
-              style={styles.input}
-              defaultValue="001001"
-              onChangeText={(value) => setPassword(value)}
-            />
-          </View>
+      </View>
+      <View style={styles.form}>
+        <InputText
+          numberOfLines={1}
+          multiline={false}
+          placeholder="E-mail"
+          onChangeText={(value) => email.set(value)}
+          error={submit.value && !email.valid}
+        />
+        <InputText
+          numberOfLines={1}
+          multiline={false}
+          placeholder="Senha"
+          onChangeText={(value) => password.set(value)}
+          secureTextEntry
+          error={submit.value && !password.valid}
+        />
 
-          <Button
-            name="Login"
-            buttonColor={styles.buttonLogin}
-            onPress={handleSignIn}
-          />
-          <View style={styles.footer}>
-            <Text style={styles.description}>
-              É a primeira vez que usa o Mix?
-            </Text>
-            <TouchableOpacity onPress={register}>
-              <Text style={styles.linkText}>Criar conta</Text>
-            </TouchableOpacity>
-          </View>
-          {/* <Button
+        <Button
+          name="Login"
+          buttonColor={styles.buttonLogin}
+          onPress={handleSignIn}
+        />
+        <View style={styles.footer}>
+          <Text style={styles.description}>
+            É a primeira vez que usa o Mix?
+          </Text>
+          <TouchableOpacity onPress={register}>
+            <Text style={styles.linkText}>Criar conta</Text>
+          </TouchableOpacity>
+        </View>
+        {/* <Button
             name="Continuar com o Facebook"
             icon="facebook"
             buttonColor={styles.buttonLoginFacebook}
           /> */}
-        </View>
       </View>
     </KeyboardAvoidingView>
   );

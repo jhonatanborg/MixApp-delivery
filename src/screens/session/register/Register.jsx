@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -10,20 +10,21 @@ import {
   Keyboard,
   SafeAreaView,
   TouchableWithoutFeedback,
-} from "react-native";
+} from 'react-native';
 
-import { TextInputMask } from "react-native-masked-text";
+import InputPhone from '../../../components/atoms/InputPhone/InputPhone';
 
-import Button from "../../../components/atoms/Button/Button";
-import { AUTH } from "../../../services/api";
-import styles from "./Register.styles";
-import logo from "../../../assets/images/logo-app.png";
+import Button from '../../../components/atoms/Button/Button';
+import { AUTH } from '../../../services/api';
+import styles from './Register.styles';
+import logo from '../../../assets/images/logo-app.png';
+import InputText from '../../../components/atoms/InputText/InputText';
+import { useRegisterFormState } from '../../../hooks/useForm';
 export default function SignIn({ navigation }) {
-  const [name, setName] = useState(null);
-  const [phone, setPhone] = useState(null);
-  const [password, setPassword] = useState(null);
+  const { email, name, phone, password, submit } = useRegisterFormState();
+
   function signIn() {
-    navigation.navigate("LoginScreen");
+    navigation.navigate('LoginScreen');
   }
   async function userRegister(data) {
     if ((name, phone, password)) {
@@ -35,7 +36,7 @@ export default function SignIn({ navigation }) {
 
       const response = await AUTH.signUp(user);
       if (response.data) {
-        navigation.navigate("Confirmation", phone);
+        navigation.navigate('Confirmation', phone);
       }
     }
   }
@@ -43,7 +44,7 @@ export default function SignIn({ navigation }) {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : null}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
     >
       <SafeAreaView style={styles.container}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -61,7 +62,38 @@ export default function SignIn({ navigation }) {
             </View>
 
             <View style={styles.form}>
-              <View style={styles.formGroup}>
+              <InputText
+                numberOfLines={1}
+                multiline={false}
+                placeholder="Nome completo"
+                onChangeText={(value) => name.set(value)}
+                error={submit.value && !name.valid}
+              />
+              <InputText
+                numberOfLines={1}
+                multiline={false}
+                placeholder="Telefone"
+                onChangeText={(value) => phone.set(value)}
+                secureTextEntry
+                error={submit.value && !phone.valid}
+              />
+              <InputPhone
+                numberOfLines={1}
+                multiline={false}
+                placeholder="Celular"
+                onChangeText={(value) => phone.set(value)}
+                error={submit.value && !phone.valid}
+                phone={phone}
+              />
+              <InputText
+                numberOfLines={1}
+                multiline={false}
+                placeholder="Senha"
+                onChangeText={(value) => password.set(value)}
+                secureTextEntry
+                error={submit.value && !password.valid}
+              />
+              {/* <View style={styles.formGroup}>
                 <Text style={styles.label}>Nome Completo</Text>
                 <TextInput
                   onChangeText={(value) => setName(value)}
@@ -70,13 +102,12 @@ export default function SignIn({ navigation }) {
               </View>
               <View style={styles.formGroup}>
                 <Text style={styles.label}>Telefone</Text>
-
                 <TextInputMask
-                  type={"cel-phone"}
+                  type={'cel-phone'}
                   options={{
-                    maskType: "BRL",
+                    maskType: 'BRL',
                     withDDD: true,
-                    dddMask: "(99) ",
+                    dddMask: '(99) ',
                   }}
                   value={phone}
                   onChangeText={(value) => setPhone(value)}
@@ -89,7 +120,7 @@ export default function SignIn({ navigation }) {
                   onChangeText={(value) => setPassword(value)}
                   style={styles.input}
                 />
-              </View>
+              </View> */}
               <Button
                 name="Criar Conta"
                 onPress={userRegister}
